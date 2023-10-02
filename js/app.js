@@ -1,16 +1,16 @@
-const loadPhones = async(search)=>{
+const loadPhones = async(search, dataLimit)=>{
     const url = `https://openapi.programming-hero.com/api/phones?search=${search}`;
 
     const res = await fetch(url)
     const data = await res.json()
-    displayPhones(data.data)
+    displayPhones(data.data, dataLimit)
 }
 
-const displayPhones = phones =>{
+const displayPhones = (phones, dataLimit) =>{
     const phoneContainer = document.getElementById ('phone-container');
     phoneContainer.textContent = '';
     const showMore = document.getElementById ('show-more');
-    if(phones.length > 6){
+    if(dataLimit && phones.length > 6){
         phones = phones.slice(0,6);
         showMore.classList.remove('d-none');
     }else{
@@ -43,16 +43,20 @@ const displayPhones = phones =>{
 }
 
 document.getElementById('search-btn').addEventListener('click', function(){
+    
+    processSearch(6);
+})
+document.getElementById('show-more-btn').addEventListener('click', function(){
+    
+    processSearch();
+})
+const processSearch = (dataLimit)=>{
     toggleSpinner(true);
     const searchText = document.getElementById('search-text');
     const search = searchText.value;
     
-    loadPhones(search);
-    searchText.value = '';
-})
-// document.getElementById('show-more').addEventListener('click', function(){
-
-// })
+    loadPhones(search, dataLimit);
+}
 
 const toggleSpinner = isLoading =>{
     const spinner = document.getElementById('spinner');
